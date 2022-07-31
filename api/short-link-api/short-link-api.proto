@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package short_link_api;
+
+//import "github.com/envoyproxy/protoc-gen-validate/validate/validate.proto";
+//import "github.com/envoyproxy/protoc-gen-validate/blob/main/validate/validate.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/blue-gopher/link-shortener-service/pkg/short-link-api;short_link_api";
+
+service ShortLinkApi {
+
+    // Return long link to short link
+    rpc GetLinkV1(google.protobuf.Empty) returns (GetLinkV1Response) {
+        option (google.api.http) = {
+            get: "/{hash_link}"
+        };
+    }
+
+    // Return generated short link for by long
+    rpc GenerateLinkV1(GenerateLinkV1Request) returns (GenerateLinkV1Response) {
+        option (google.api.http) = {
+            post: "/v1/link/generate"
+        };
+    }
+
+    // Return statistics of clicks on a link
+    rpc GetStatisticV1(GetStatisticV1Request) returns (GetStatisticV1Response) {
+        option (google.api.http) = {
+            get: "/v1/link/statistic"
+        };
+    }
+}
+
+message GetLinkV1Response {
+    string link = 1;
+}
+
+message GenerateLinkV1Request {
+    string long_link = 1;
+}
+
+message GenerateLinkV1Response {
+    string link = 1;
+}
+
+message GetStatisticV1Request {
+    string link = 1;
+}
+
+message GetStatisticV1Response {
+    string link = 1;
+    repeated Statistic statistic = 2;
+}
+
+message Statistic {
+    string ip = 1;
+    google.protobuf.Timestamp date_time = 2;
+}
